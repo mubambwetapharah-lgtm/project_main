@@ -5688,6 +5688,8 @@ GameObject:
   - component: {fileID: 343799694}
   - component: {fileID: 343799693}
   - component: {fileID: 343799699}
+  - component: {fileID: 343799700}
+  - component: {fileID: 343799701}
   m_Layer: 0
   m_Name: PLAYER
   m_TagString: Player
@@ -5893,6 +5895,40 @@ MonoBehaviour:
   showFirePointGizmo: 1
   fireRate: 0.1
   fireButton: 2
+--- !u!95 &343799700
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343799692}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b5264ebe2f689de4a911d824e2a075d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &343799701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343799692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 047459e3ceef34a4d80febc021148d3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
