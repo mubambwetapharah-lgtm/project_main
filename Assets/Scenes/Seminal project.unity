@@ -209,8 +209,8 @@ Transform:
   m_GameObject: {fileID: 40767209}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 202.881, y: -86.5045, z: -10.9941}
-  m_LocalScale: {x: 0.065100916, y: 0.06892825, z: 0.1323683}
+  m_LocalPosition: {x: 215.9602, y: -83.9069, z: 0}
+  m_LocalScale: {x: 0.3043, y: 0.28485, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -273,8 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d81494caecf770418122874864e2cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player2_Jump
-  jumpForce: 9
-  fallMultiplier: 2.5
+  jumpForce: 19
+  fallMultiplier: 7
   groundCheck: {fileID: 155386296}
   groundCheckRadius: 0.1
   groundLayer:
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e0e9be0367548648aaf2060a5251286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement2
-  speed: 5
+  speed: 19
 --- !u!114 &40767216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,10 +333,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShootBullet2
   bulletPrefab: {fileID: 662985955627373851, guid: c9c6c73f8a2766744af1aa87468c199b, type: 3}
-  bulletSpeed: 10
+  bulletSpeed: 70
   firePointOffset: {x: 0.5, y: 0}
   showFirePointGizmo: 1
-  fireRate: 0.5
+  fireRate: 0.1
   fireButton: 4
 --- !u!1 &57409504
 GameObject:
@@ -4681,7 +4681,7 @@ MonoBehaviour:
   firePointOffset: {x: 0.5, y: 0}
   showFirePointGizmo: 1
   fireRate: 0.1
-  fireButton: 0
+  fireButton: 2
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -5096,4 +5096,3 @@ SceneRoots:
   - {fileID: 559171491}
   - {fileID: 343799698}
   - {fileID: 40767211}
-
