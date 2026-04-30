@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 
-public class ShootBullet : MonoBehaviour
+public class ShootBullet2 : MonoBehaviour
 {
     [Header("총알 설정")]
     public GameObject bulletPrefab;
@@ -109,16 +109,20 @@ public class ShootBullet : MonoBehaviour
             Debug.LogError("Fire Point가 생성되지 않았습니다!");
             return;
         }
+
+
         float direction = transform.localScale.x > 0 ? 1f : -1f;
+        direction = -direction;
         GameObject bullet = Instantiate(prefabToUse, firePoint.position, Quaternion.identity);
-        Debug.Log($"선수 1 총알 크기: {bullet.transform.localScale}");
+
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
             bulletScript.speed = bulletSpeed;
             bulletScript.direction = new Vector2(direction, 0);
-             bulletScript.owner = gameObject;
+             bulletScript.owner = gameObject; // ⭐ 발사자 정보 전달
         }
+        bullet.transform.localScale = prefabToUse.transform.localScale;
         AudioSource audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
     }
