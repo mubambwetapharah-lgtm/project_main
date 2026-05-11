@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class Player2_Jump : MonoBehaviour
 {
-    
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float fallMultiplier = 2.5f;
 
@@ -14,10 +13,12 @@ public class Player2_Jump : MonoBehaviour
 
     private Rigidbody2D rb;
     private InputAction jumpAction;
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         jumpAction = new InputAction(binding: "<Keyboard>/upArrow");
         jumpAction.Enable();
     }
@@ -28,6 +29,7 @@ public class Player2_Jump : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            animator.SetBool("IsJumping", true);
         }
 
         if (jumpAction.WasReleasedThisFrame() && rb.linearVelocity.y > 0f)
@@ -38,6 +40,13 @@ public class Player2_Jump : MonoBehaviour
         if (rb.linearVelocity.y < 0f)
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+
+        animator.SetFloat("VelocityY", rb.linearVelocity.y);
+
+        if (IsGrounded() && !jumpAction.WasPressedThisFrame())
+        {
+            animator.SetBool("IsJumping", false);
         }
     }
 
