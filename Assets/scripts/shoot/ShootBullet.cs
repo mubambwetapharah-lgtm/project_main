@@ -116,6 +116,7 @@ public class ShootBullet : MonoBehaviour
         {
             bulletScript.speed = bulletSpeed;
             bulletScript.direction = new Vector2(direction, 0);
+            bulletScript.SetOwner(this.gameObject);
         }
         AudioSource audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
