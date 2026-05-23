@@ -21,13 +21,14 @@ public class ShootBullet : MonoBehaviour
     private Transform firePoint;
     private GameObject cachedBulletPrefab;
     private InputAction fireAction;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         CreateFirePoint();
         cachedBulletPrefab = bulletPrefab;
         StartCoroutine(WakeUpPrefab());
-
         fireAction = CreateFireAction(fireButton);
         fireAction.Enable();
 
@@ -67,8 +68,6 @@ public class ShootBullet : MonoBehaviour
         fireAction.Disable();
     }
 
-    // ====== Всё ниже без изменений ======
-
     IEnumerator WakeUpPrefab()
     {
         yield return new WaitForSeconds(0.1f);
@@ -87,12 +86,12 @@ public class ShootBullet : MonoBehaviour
     void UpdateFirePointDirection()
     {
         if (firePoint == null) return;
-        bool isFacingLeft = transform.localScale.x < 0;
+
+        // ✅ flipX от напарника, localScale как запасной вариант
+        bool isFacingLeft = spriteRenderer != null ? spriteRenderer.flipX : transform.localScale.x < 0;
+
         Vector2 offset = firePointOffset;
-        if (isFacingLeft)
-            offset.x = -Mathf.Abs(firePointOffset.x);
-        else
-            offset.x = Mathf.Abs(firePointOffset.x);
+        offset.x = isFacingLeft ? -Mathf.Abs(firePointOffset.x) : Mathf.Abs(firePointOffset.x);
         firePoint.localPosition = offset;
     }
 
@@ -101,7 +100,7 @@ public class ShootBullet : MonoBehaviour
         GameObject prefabToUse = bulletPrefab != null ? bulletPrefab : cachedBulletPrefab;
         if (prefabToUse == null)
         {
-            Debug.LogError("Bullet Prefab이 null입니다! Inspector에서 다시 설정하십시오.");
+            Debug.LogError("Bullet Prefab이 null입니다!");
             return;
         }
         if (firePoint == null)
@@ -109,8 +108,20 @@ public class ShootBullet : MonoBehaviour
             Debug.LogError("Fire Point가 생성되지 않았습니다!");
             return;
         }
-        float direction = transform.localScale.x > 0 ? 1f : -1f;
+
+        // ✅ flipX от напарника, localScale как запасной вариант
+        float direction = spriteRenderer != null
+            ? (spriteRenderer.flipX ? -1f : 1f)
+            : (transform.localScale.x > 0 ? 1f : -1f);
+
         GameObject bullet = Instantiate(prefabToUse, firePoint.position, Quaternion.identity);
+
+        // ✅ фиксация масштаба пули от напарника
+        Vector3 fixedScale = prefabToUse.transform.localScale;
+        fixedScale.x = Mathf.Abs(fixedScale.x);
+        fixedScale.y = Mathf.Abs(fixedScale.y);
+        bullet.transform.localScale = fixedScale;
+
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
@@ -118,6 +129,7 @@ public class ShootBullet : MonoBehaviour
             bulletScript.direction = new Vector2(direction, 0);
             bulletScript.SetOwner(this.gameObject);
         }
+
         AudioSource audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
     }

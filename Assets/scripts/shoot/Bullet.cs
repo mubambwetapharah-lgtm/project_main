@@ -31,8 +31,23 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         rb2D.linearVelocity = direction.normalized * speed;
+
+        // ✅ исправление напарника — сохраняем оригинальный масштаб
         if (direction.x < 0)
-            transform.localScale = new Vector3(-1, 1, 1);
+        {
+            Vector3 currentScale = transform.localScale;
+            transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z);
+        }
+
+        // ✅ игнорируем коллайдер владельца сразу при старте
+        if (owner != null)
+        {
+            Collider2D ownerCollider = owner.GetComponent<Collider2D>();
+            Collider2D bulletCollider = GetComponent<Collider2D>();
+            if (ownerCollider != null && bulletCollider != null)
+                Physics2D.IgnoreCollision(ownerCollider, bulletCollider, true);
+        }
+
         Destroy(gameObject, lifeTime);
     }
 
@@ -47,7 +62,7 @@ public class Bullet : MonoBehaviour
             return;
         }
         ContactPoint2D contact = collision.GetContact(0);
-        Debug.Log($"💥 정확한 충돌 지점: {contact.point}");
+        Debug.Log($"💥 충돌 지점: {contact.point}");
         HandleCollision(collision.gameObject);
     }
 
@@ -71,15 +86,22 @@ public class Bullet : MonoBehaviour
             circle.radius = colliderSize;
         else if (col is BoxCollider2D box)
             box.size = new Vector2(colliderSize, colliderSize);
-        Debug.Log($"Collider 크기 조정됨: {colliderSize}");
     }
 
     void HandleCollision(GameObject hitObject)
     {
         if (hitEffectPrefab != null)
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-        Debug.Log($"총알이 {hitObject.name}와(과) 충돌하여 제거됩니다.");
         Destroy(gameObject);
+    }
+
+    public void SetOwner(GameObject ownerObject)
+    {
+        owner = ownerObject;
+        Collider2D ownerCollider = ownerObject.GetComponent<Collider2D>();
+        Collider2D bulletCollider = GetComponent<Collider2D>();
+        if (ownerCollider != null && bulletCollider != null)
+            Physics2D.IgnoreCollision(bulletCollider, ownerCollider);
     }
 
     void OnDrawGizmos()
@@ -88,11 +110,5 @@ public class Bullet : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         if (col != null && col is CircleCollider2D circle)
             Gizmos.DrawWireSphere(transform.position, circle.radius);
-    }
-
-    public void SetOwner(GameObject ownerObject)
-    {
-        owner = ownerObject;
-        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), owner.GetComponent<Collider2D>());
     }
 }
