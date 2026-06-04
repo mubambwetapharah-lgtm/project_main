@@ -1,45 +1,83 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
+using System.Collections;
 
 public class restart : MonoBehaviour
 {
-    [Header("버튼 설정")]
-    public UnityEngine.UI.Button restartButton;
+    [Header("Pause Menu")]
+    public GameObject pauseMenu;
+    public Button continueButton;
+    public Button pauseRestartButton;
+    public Button pauseMainMenuButton;
+
+    [Header("Death Menu")]
+    public GameObject deathMenu;
+    public Button deathRestartButton;
+    public Button deathMainMenuButton;
+
+    [Header("Countdown")]
+    public GameObject countdownObject;
+    public TextMeshProUGUI countdownText;
+
+    private bool isPaused = false;
 
     void Start()
     {
-        if (restartButton != null)
-            restartButton.onClick.AddListener(() => RestartGame());
-        else
-            Debug.LogWarning("Restart 버튼이 Inspector에 연결되지 않았습니다!");
+        pauseMenu.SetActive(false);
+        deathMenu.SetActive(false);
+        countdownObject.SetActive(false);
+
+        continueButton.onClick.AddListener(ContinueGame);
+        pauseRestartButton.onClick.AddListener(() => RestartGame());
+        pauseMainMenuButton.onClick.AddListener(GoToMainMenu);
+
+        deathRestartButton.onClick.AddListener(() => RestartGame());
+        deathMainMenuButton.onClick.AddListener(GoToMainMenu);
     }
 
     void Update()
     {
-        // R 키 또는 ESC 키로 재시작
-        if (Keyboard.current != null)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (Keyboard.current.rKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame)
-            {
-                Debug.Log("키 입력 감지됨 - 재시작 실행");
-                RestartGame();
-            }
+            if (isPaused) ContinueGame();
+            else PauseGame();
         }
     }
 
-    public void RestartGame()
+    void PauseGame()
     {
-        Debug.Log("=== 게임 재시작 ===");
-        
-        // 시간 스케일 정상화
+        isPaused = true;
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    void ContinueGame()
+    {
+        isPaused = false;
+        pauseMenu.SetActive(false);
         Time.timeScale = 1f;
-        
-        // 방법 1: 씬 이름으로 로드 (가장 안정적)
-        string sceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(sceneName);
-        
-        // 방법 2: 인덱스로 로드 (빌드 설정 필요)
-        // SceneManager.LoadScene(0);
+    }
+
+    public void ShowDeathMenu()
+    {
+        deathMenu.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    void GoToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu"); // назови сцену главного меню
+    }
+
+    void RestartGame()
+    {
+        pauseMenu.SetActive(false);
+        deathMenu.SetActive(false);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
