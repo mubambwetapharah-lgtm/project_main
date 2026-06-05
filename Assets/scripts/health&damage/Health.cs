@@ -16,13 +16,14 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
         Debug.Log($"{gameObject.name} получил урон, здоровье: {currentHealth}");
         if (currentHealth <= 0)
+        {
             Die();
+        }
     }
 
     void Die()
     {
         Debug.Log($"{gameObject.name} умер!");
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        FindAnyObjectByType<restart>().ShowDeathMenu();
     }
 }
