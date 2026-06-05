@@ -5,35 +5,47 @@ using System.Collections;
 public class CountdownManager : MonoBehaviour
 {
     public TextMeshProUGUI countdownText;
+    public static bool isPaused = false;
 
     void Start()
     {
-        Time.timeScale = 0f; // останавливаем время
         StartCoroutine(StartCountdown());
     }
 
     IEnumerator StartCountdown()
     {
+        Time.timeScale = 0f;
+        gameObject.SetActive(true);
+
         for (int i = 3; i >= 1; i--)
         {
             countdownText.text = i.ToString();
-            yield return new WaitForSecondsRealtime(1f);
+            float timer = 1f;
+            while (timer > 0f)
+            {
+                if (!isPaused) timer -= Time.unscaledDeltaTime;
+                yield return null;
+            }
         }
 
         countdownText.text = "START!";
-        yield return new WaitForSecondsRealtime(0.5f);
+        float startTimer = 0.5f;
+        while (startTimer > 0f)
+        {
+            if (!isPaused) startTimer -= Time.unscaledDeltaTime;
+            yield return null;
+        }
 
-        // Плавное исчезновение
         float alpha = 1f;
         while (alpha > 0f)
         {
-            alpha -= Time.unscaledDeltaTime * 2f;
+            if (!isPaused) alpha -= Time.unscaledDeltaTime * 2f;
             countdownText.alpha = alpha;
             yield return null;
         }
 
         countdownText.alpha = 1f;
         gameObject.SetActive(false);
-        Time.timeScale = 1f; // запускаем время
+        Time.timeScale = 1f;
     }
 }

@@ -22,13 +22,16 @@ public class restart : MonoBehaviour
     public GameObject countdownObject;
     public TextMeshProUGUI countdownText;
 
+    [Header("Players")]
+    public Animator player1Animator;
+    public Animator player2Animator;
+
     private bool isPaused = false;
 
     void Start()
     {
         pauseMenu.SetActive(false);
         deathMenu.SetActive(false);
-        countdownObject.SetActive(false);
 
         continueButton.onClick.AddListener(ContinueGame);
         pauseRestartButton.onClick.AddListener(() => RestartGame());
@@ -52,6 +55,9 @@ public class restart : MonoBehaviour
         isPaused = true;
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
+        CountdownManager.isPaused = true;
+        if (player1Animator != null) player1Animator.speed = 0f;
+        if (player2Animator != null) player2Animator.speed = 0f;
     }
 
     void ContinueGame()
@@ -59,6 +65,9 @@ public class restart : MonoBehaviour
         isPaused = false;
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
+        CountdownManager.isPaused = false;
+        if (player1Animator != null) player1Animator.speed = 1f;
+        if (player2Animator != null) player2Animator.speed = 1f;
     }
 
     public void ShowDeathMenu()
@@ -78,6 +87,7 @@ public class restart : MonoBehaviour
         pauseMenu.SetActive(false);
         deathMenu.SetActive(false);
         Time.timeScale = 1f;
+        CountdownManager.isPaused = false; // ← добавь эту строку
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
