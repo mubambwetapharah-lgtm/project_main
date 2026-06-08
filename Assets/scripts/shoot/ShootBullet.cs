@@ -21,9 +21,12 @@ public class ShootBullet : MonoBehaviour
     private Transform firePoint;
     private GameObject cachedBulletPrefab;
     private InputAction fireAction;
+    private SpriteRenderer spriteRenderer;  // ✅ 추가
 
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();  // ✅ 추가
+        
         CreateFirePoint();
         cachedBulletPrefab = bulletPrefab;
         StartCoroutine(WakeUpPrefab());
@@ -67,8 +70,6 @@ public class ShootBullet : MonoBehaviour
         fireAction.Disable();
     }
 
-    // ====== Всё ниже без изменений ======
-
     IEnumerator WakeUpPrefab()
     {
         yield return new WaitForSeconds(0.1f);
@@ -87,12 +88,20 @@ public class ShootBullet : MonoBehaviour
     void UpdateFirePointDirection()
     {
         if (firePoint == null) return;
-        bool isFacingLeft = transform.localScale.x < 0;
+        
+        // ✅ flipX 검사로 수정
+        bool isFacingLeft = false;
+        if (spriteRenderer != null)
+            isFacingLeft = spriteRenderer.flipX;
+        else
+            isFacingLeft = transform.localScale.x < 0;
+        
         Vector2 offset = firePointOffset;
         if (isFacingLeft)
             offset.x = -Mathf.Abs(firePointOffset.x);
         else
             offset.x = Mathf.Abs(firePointOffset.x);
+        
         firePoint.localPosition = offset;
     }
 
@@ -109,9 +118,22 @@ public class ShootBullet : MonoBehaviour
             Debug.LogError("Fire Point가 생성되지 않았습니다!");
             return;
         }
-        float direction = transform.localScale.x > 0 ? 1f : -1f;
+        
+        // ✅ flipX 검사로 방향 결정
+        float direction = 1f;
+        if (spriteRenderer != null)
+            direction = spriteRenderer.flipX ? -1f : 1f;
+        else
+            direction = transform.localScale.x > 0 ? 1f : -1f;
+        
         GameObject bullet = Instantiate(prefabToUse, firePoint.position, Quaternion.identity);
         Debug.Log($"선수 1 총알 크기: {bullet.transform.localScale}");
+        
+        // ✅ 총알 크기 고정 (선택사항, Bullet.cs에서 이미 처리했다면 생략 가능)
+        // Vector3 fixedScale = prefabToUse.transform.localScale;
+        // fixedScale.x = Mathf.Abs(fixedScale.x);
+        // bullet.transform.localScale = fixedScale;
+        
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
@@ -119,6 +141,7 @@ public class ShootBullet : MonoBehaviour
             bulletScript.direction = new Vector2(direction, 0);
              bulletScript.owner = gameObject;
         }
+        
         AudioSource audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
     }

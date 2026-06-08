@@ -21,9 +21,12 @@ public class ShootBullet2 : MonoBehaviour
     private Transform firePoint;
     private GameObject cachedBulletPrefab;
     private InputAction fireAction;
+    private SpriteRenderer spriteRenderer;  // ✅ 여기로 이동 (클래스 레벨)
 
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        
         CreateFirePoint();
         cachedBulletPrefab = bulletPrefab;
         StartCoroutine(WakeUpPrefab());
@@ -33,6 +36,9 @@ public class ShootBullet2 : MonoBehaviour
 
         if (cachedBulletPrefab == null)
             Debug.LogError("Bullet Prefab이 Inspector에 설정되지 않았습니다!");
+        
+        if (spriteRenderer == null)
+            Debug.LogWarning("SpriteRenderer를 찾을 수 없습니다! Flip 검사를 하려면 SpriteRenderer가 필요합니다.");
     }
 
     InputAction CreateFireAction(FireButton button)
@@ -67,8 +73,6 @@ public class ShootBullet2 : MonoBehaviour
         fireAction.Disable();
     }
 
-    // ====== Всё ниже без изменений ======
-
     IEnumerator WakeUpPrefab()
     {
         yield return new WaitForSeconds(0.1f);
@@ -87,12 +91,21 @@ public class ShootBullet2 : MonoBehaviour
     void UpdateFirePointDirection()
     {
         if (firePoint == null) return;
-        bool isFacingLeft = transform.localScale.x < 0;
+        
+        // ✅ 중복 선언 제거
+        bool isFacingLeft = false;
+        
+        if (spriteRenderer != null)
+            isFacingLeft = spriteRenderer.flipX;
+        else
+            isFacingLeft = transform.localScale.x < 0;
+        
         Vector2 offset = firePointOffset;
         if (isFacingLeft)
             offset.x = -Mathf.Abs(firePointOffset.x);
         else
             offset.x = Mathf.Abs(firePointOffset.x);
+        
         firePoint.localPosition = offset;
     }
 
@@ -109,20 +122,41 @@ public class ShootBullet2 : MonoBehaviour
             Debug.LogError("Fire Point가 생성되지 않았습니다!");
             return;
         }
-
-
-        float direction = transform.localScale.x > 0 ? 1f : -1f;
-        direction = -direction;
+        
+        // ✅ 방향 결정 (중복 제거)
+        float direction = 1f;
+        
+        if (spriteRenderer != null)
+        {
+            if (spriteRenderer.flipX)
+                direction = -1f;
+            else
+                direction = 1f;
+        }
+        else
+        {
+            direction = transform.localScale.x > 0 ? 1f : -1f;
+        }
+        
+        // ✅ 총알 생성 (중복 제거)
         GameObject bullet = Instantiate(prefabToUse, firePoint.position, Quaternion.identity);
-
+        
+        // ✅ 크기 고정
+        Vector3 fixedScale = prefabToUse.transform.localScale;
+        fixedScale.x = Mathf.Abs(fixedScale.x);
+        fixedScale.y = Mathf.Abs(fixedScale.y);
+        bullet.transform.localScale = fixedScale;
+        
+        // ✅ Bullet 스크립트 설정
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
             bulletScript.speed = bulletSpeed;
             bulletScript.direction = new Vector2(direction, 0);
-             bulletScript.owner = gameObject; // ⭐ 발사자 정보 전달
+            bulletScript.owner = gameObject;
         }
-        bullet.transform.localScale = prefabToUse.transform.localScale;
+        
+        // ✅ 오디오 재생
         AudioSource audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
     }

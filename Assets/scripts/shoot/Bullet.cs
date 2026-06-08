@@ -34,6 +34,7 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         rb2D.linearVelocity = direction.normalized * speed;
+
         
         // ⭐ 방향 반전할 때 원래 크기 유지
         if (direction.x < 0)
@@ -56,6 +57,8 @@ public class Bullet : MonoBehaviour
         }
         
         // ⭐ 생명주기 동안만 유지 (한 번만 호출)
+        // if (direction.x < 0)
+        //     transform.localScale = new Vector3(-1, 1, 1);
         Destroy(gameObject, lifeTime);
     }
 
