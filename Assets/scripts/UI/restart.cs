@@ -79,7 +79,7 @@ public class restart : MonoBehaviour
     void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu"); // назови сцену главного меню
+        SceneManager.LoadScene("Main_menu"); // назови сцену главного меню
     }
 
     void RestartGame()
