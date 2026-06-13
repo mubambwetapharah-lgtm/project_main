@@ -13,10 +13,12 @@ public class PlayerJump : MonoBehaviour
 
     private Rigidbody2D rb;
     private InputAction jumpAction;
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         jumpAction = new InputAction(binding: "<Keyboard>/w");
         jumpAction.Enable();
     }
@@ -27,6 +29,7 @@ public class PlayerJump : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            animator.SetBool("IsJumping", true);
         }
 
         if (jumpAction.WasReleasedThisFrame() && rb.linearVelocity.y > 0f)
@@ -37,6 +40,15 @@ public class PlayerJump : MonoBehaviour
         if (rb.linearVelocity.y < 0f)
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+
+        // Обновляем VelocityY каждый кадр
+        animator.SetFloat("VelocityY", rb.linearVelocity.y);
+
+        // Приземлились — сбрасываем прыжок
+        if (IsGrounded() && !jumpAction.WasPressedThisFrame())
+        {
+            animator.SetBool("IsJumping", false);
         }
     }
 
