@@ -27,6 +27,7 @@ public class restart : MonoBehaviour
     public Animator player2Animator;
 
     private bool isPaused = false;
+    private bool isDead = false;
 
     void Start()
     {
@@ -43,6 +44,8 @@ public class restart : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (isPaused) ContinueGame();
@@ -72,6 +75,7 @@ public class restart : MonoBehaviour
 
     public void ShowDeathMenu()
     {
+        isDead = true;
         deathMenu.SetActive(true);
         Time.timeScale = 0f;
     }
@@ -79,7 +83,8 @@ public class restart : MonoBehaviour
     void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Main_menu"); // назови сцену главного меню
+        CountdownManager.isPaused = false;
+        SceneManager.LoadScene("Main_menu");
     }
 
     void RestartGame()
