@@ -17,6 +17,8 @@ public class ShootBullet : MonoBehaviour
     public enum FireButton { MouseLeft, MouseRight, Space, J, K, Z, X }
     public FireButton fireButton = FireButton.MouseLeft;
 
+    public System.Action OnFire;
+
     private float nextFireTime = -1f;
     private Transform firePoint;
     private GameObject cachedBulletPrefab;
@@ -130,6 +132,9 @@ public class ShootBullet : MonoBehaviour
             bulletScript.SetOwner(this.gameObject);
         }
 
+
+        OnFire?.Invoke();
+        
         AudioSource audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
     }
