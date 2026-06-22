@@ -5702,7 +5702,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 343799692}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1d52a5519da5cd44acc7e1746da7e08, type: 3}
   m_Name: 
@@ -5730,7 +5730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunSoundDetector
   shootSounds:
   - {fileID: 8300000, guid: 4936c81b97528444e8aa084a91f26631, type: 3}
-  volume: 1
+  volume: 0.2
   pitchRange: {x: 0.95, y: 1.05}
   shootScript: {fileID: 0}
 --- !u!114 &343799707
@@ -5747,7 +5747,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeathSoundEvent
   deathSounds:
   - {fileID: 8300000, guid: e3cb8ff255b25594aba79a3c74f506c6, type: 3}
-  volume: 1
+  volume: 0.5
   pitchRange: {x: 0.9, y: 1.1}
   playerHealth: {fileID: 0}
 --- !u!114 &343799708
@@ -5764,7 +5764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitSoundSimple
   hitSounds:
   - {fileID: 8300000, guid: 23218506c755cda4cb522c64289e5fdc, type: 3}
-  volume: 1
+  volume: 0.7
   randomPitch: 1
   pitchRange: {x: 0.9, y: 1.1}
 --- !u!1 &350959087
@@ -6279,7 +6279,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 396605280}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1d52a5519da5cd44acc7e1746da7e08, type: 3}
   m_Name: 
@@ -6307,7 +6307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunSoundEvent
   shootSounds:
   - {fileID: 8300000, guid: 4936c81b97528444e8aa084a91f26631, type: 3}
-  volume: 1
+  volume: 0.2
   pitchRange: {x: 0.95, y: 1.05}
   shootScript: {fileID: 0}
 --- !u!82 &396605292
@@ -6421,7 +6421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeathSoundEvent
   deathSounds:
   - {fileID: 8300000, guid: e3cb8ff255b25594aba79a3c74f506c6, type: 3}
-  volume: 1
+  volume: 0.5
   pitchRange: {x: 0.9, y: 1.1}
   playerHealth: {fileID: 0}
 --- !u!114 &396605294
@@ -6438,7 +6438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitSoundEvent
   hitSounds:
   - {fileID: 8300000, guid: 23218506c755cda4cb522c64289e5fdc, type: 3}
-  volume: 1
+  volume: 0.7
   randomPitch: 1
   pitchRange: {x: 0.9, y: 1.1}
 --- !u!1 &486429542
