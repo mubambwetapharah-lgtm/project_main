@@ -6,6 +6,10 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 3;
     public int currentHealth;
 
+    public System.Action OnDeath; 
+
+    public System.Action OnDamaged;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -15,6 +19,9 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth -= damage;
         Debug.Log($"{gameObject.name} получил урон, здоровье: {currentHealth}");
+
+        OnDamaged?.Invoke();
+        
         if (currentHealth <= 0)
         {
             Die();
@@ -24,6 +31,7 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log($"{gameObject.name} умер!");
+        OnDeath?.Invoke();
         FindAnyObjectByType<restart>().ShowDeathMenu();
     }
 }
