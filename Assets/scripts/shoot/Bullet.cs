@@ -9,15 +9,22 @@ public class Bullet : MonoBehaviour
     public float lifeTime = 3f;
     public int damage = 1;
     public Vector2 direction = Vector2.right;
+    public GameObject owner;
 
     [Header("충돌 정밀도 설정")]
     public float colliderSize = 0.15f;
+<<<<<<< HEAD
     
     [Header("효과 (선택사항)")]
     public GameObject hitEffectPrefab;
     
     [Header("발사자정보")]
     public GameObject owner;
+=======
+
+    [Header("효과 (선택사항)")]
+    public GameObject hitEffectPrefab;
+>>>>>>> main
 
     private Rigidbody2D rb2D;
 
@@ -27,20 +34,29 @@ public class Bullet : MonoBehaviour
         rb2D.gravityScale = 0f;
         rb2D.bodyType = RigidbodyType2D.Dynamic;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+<<<<<<< HEAD
 
         // AdjustColliderSize(); // 주석 처리 유지
+=======
+        AdjustColliderSize();
+>>>>>>> main
     }
 
     void Start()
     {
         rb2D.linearVelocity = direction.normalized * speed;
 
+<<<<<<< HEAD
         
         // ⭐ 방향 반전할 때 원래 크기 유지
+=======
+        // ✅ исправление напарника — сохраняем оригинальный масштаб
+>>>>>>> main
         if (direction.x < 0)
         {
             Vector3 currentScale = transform.localScale;
             transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z);
+<<<<<<< HEAD
         }
 
         // ⭐ 발사자와 충돌 무시
@@ -59,11 +75,25 @@ public class Bullet : MonoBehaviour
         // ⭐ 생명주기 동안만 유지 (한 번만 호출)
         // if (direction.x < 0)
         //     transform.localScale = new Vector3(-1, 1, 1);
+=======
+        }
+
+        // ✅ игнорируем коллайдер владельца сразу при старте
+        if (owner != null)
+        {
+            Collider2D ownerCollider = owner.GetComponent<Collider2D>();
+            Collider2D bulletCollider = GetComponent<Collider2D>();
+            if (ownerCollider != null && bulletCollider != null)
+                Physics2D.IgnoreCollision(ownerCollider, bulletCollider, true);
+        }
+
+>>>>>>> main
         Destroy(gameObject, lifeTime);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+<<<<<<< HEAD
         // ⭐ 발사자와 충돌 시 무시
         if (owner != null && collision.gameObject == owner)
         {
@@ -82,11 +112,24 @@ public class Bullet : MonoBehaviour
         // 기타 오브젝트와 충돌
         ContactPoint2D contact = collision.GetContact(0);
         Debug.Log($"💥 정확한 충돌 지점: {contact.point}");
+=======
+        if (collision.gameObject == owner) return;
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage(damage);
+            Destroy(gameObject);
+            return;
+        }
+        ContactPoint2D contact = collision.GetContact(0);
+        Debug.Log($"💥 충돌 지점: {contact.point}");
+>>>>>>> main
         HandleCollision(collision.gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
+<<<<<<< HEAD
         // ⭐ 발사자 무시
         if (owner != null && other.gameObject == owner)
             return;
@@ -103,26 +146,58 @@ public class Bullet : MonoBehaviour
         {
             HandleCollision(other.gameObject);
         }
+=======
+        if (other.gameObject == owner) return;
+
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerHealth>()?.TakeDamage(damage);
+            Destroy(gameObject);
+            return;
+        }
+        HandleCollision(other.gameObject);
+    }
+
+    void AdjustColliderSize()
+    {
+        Collider2D col = GetComponent<Collider2D>();
+        if (col is CircleCollider2D circle)
+            circle.radius = colliderSize;
+        else if (col is BoxCollider2D box)
+            box.size = new Vector2(colliderSize, colliderSize);
+>>>>>>> main
     }
 
     void HandleCollision(GameObject hitObject)
     {
         if (hitEffectPrefab != null)
-        {
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+<<<<<<< HEAD
         }
 
         Debug.Log($"총알이 {hitObject.name}와(과) 충돌하여 제거됩니다.");
         Destroy(gameObject);
     }
 
+=======
+        Destroy(gameObject);
+    }
+
+    public void SetOwner(GameObject ownerObject)
+    {
+        owner = ownerObject;
+        Collider2D ownerCollider = ownerObject.GetComponent<Collider2D>();
+        Collider2D bulletCollider = GetComponent<Collider2D>();
+        if (ownerCollider != null && bulletCollider != null)
+            Physics2D.IgnoreCollision(bulletCollider, ownerCollider);
+    }
+
+>>>>>>> main
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Collider2D col = GetComponent<Collider2D>();
         if (col != null && col is CircleCollider2D circle)
-        {
             Gizmos.DrawWireSphere(transform.position, circle.radius);
-        }
     }
 }
