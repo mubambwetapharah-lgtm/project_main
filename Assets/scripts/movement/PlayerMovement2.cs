@@ -12,6 +12,7 @@ public class PlayerMovement2 : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.freezeRotation = true; // страховка: физические удары не должны вращать/разворачивать игрока
         animator = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         sr.flipX = true; // по умолчанию смотрит вправо
