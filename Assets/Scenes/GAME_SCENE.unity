@@ -7248,7 +7248,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d4e95cdf21187a64ea75d396fc3b94ce, type: 3}
   volume: 0.6
   randomPitch: 1
-  pitchRange: {x: 0.9, y: 1.1}
+  pitchRange: {x: 0.9, y: 1.1}    
 --- !u!114 &396605294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7669,7 +7669,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -7694,7 +7694,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

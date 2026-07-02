@@ -9,13 +9,18 @@ public class Bullet : MonoBehaviour
     public float lifeTime = 3f;
     public int damage = 1;
     public Vector2 direction = Vector2.right;
-    public GameObject owner;
 
     [Header("충돌 정밀도 설정")]
     public float colliderSize = 0.15f;
 
+    
     [Header("효과 (선택사항)")]
     public GameObject hitEffectPrefab;
+    
+    [Header("발사자정보")]
+    public GameObject owner;
+
+
 
     private Rigidbody2D rb2D;
 
@@ -26,6 +31,8 @@ public class Bullet : MonoBehaviour
         rb2D.bodyType = RigidbodyType2D.Dynamic;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
+
+        // AdjustColliderSize(); // 주석 처리 유지
         // Пуля никогда не должна физически толкать игроков —
         // только регистрировать попадание. Иначе физический
         // импульс от столкновения может провернуть/развернуть
@@ -34,18 +41,43 @@ public class Bullet : MonoBehaviour
         if (col != null) col.isTrigger = true;
 
         AdjustColliderSize();
+
     }
 
     void Start()
     {
         rb2D.linearVelocity = direction.normalized * speed;
 
+
+        
+        // ⭐ 방향 반전할 때 원래 크기 유지
+
         // ✅ исправление напарника — сохраняем оригинальный масштаб
+
         if (direction.x < 0)
         {
             Vector3 currentScale = transform.localScale;
             transform.localScale = new Vector3(-Mathf.Abs(currentScale.x), currentScale.y, currentScale.z);
+
         }
+
+        // ⭐ 발사자와 충돌 무시
+        if (owner != null)
+        {
+            Collider2D ownerCollider = owner.GetComponent<Collider2D>();
+            Collider2D bulletCollider = GetComponent<Collider2D>();
+
+            if (ownerCollider != null && bulletCollider != null)
+            {
+                Physics2D.IgnoreCollision(ownerCollider, bulletCollider, true);
+                Debug.Log($"✅ 총알이 {owner.name}와(과) 충돌 무시 설정됨");
+            }
+        }
+        
+        // ⭐ 생명주기 동안만 유지 (한 번만 호출)
+        // if (direction.x < 0)
+        //     transform.localScale = new Vector3(-1, 1, 1);
+
 
         // ✅ игнорируем коллайдер владельца сразу при старте
         if (owner != null)
@@ -56,11 +88,64 @@ public class Bullet : MonoBehaviour
                 Physics2D.IgnoreCollision(ownerCollider, bulletCollider, true);
         }
 
+
         Destroy(gameObject, lifeTime);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        // ⭐ 발사자와 충돌 시 무시
+        if (owner != null && collision.gameObject == owner)
+        {
+            Debug.Log($"🛡️ 발사자 {owner.name}와 충돌 - 무시됨");
+            return;
+        }
+
+        // ⭐ 다른 플레이어와 충돌
+        if (collision.gameObject.CompareTag("Player") && collision.gameObject != owner)
+        {
+            Debug.Log($"🎯 {collision.gameObject.name} 명중!");
+            HandleCollision(collision.gameObject);
+            return;
+        }
+
+        // 기타 오브젝트와 충돌
+        ContactPoint2D contact = collision.GetContact(0);
+        Debug.Log($"💥 정확한 충돌 지점: {contact.point}");
+
+        if (collision.gameObject == owner) return;
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage(damage);
+            Destroy(gameObject);
+            return;
+        }
+
+        HandleCollision(collision.gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
+
+        // ⭐ 발사자 무시
+        if (owner != null && other.gameObject == owner)
+            return;
+            
+        // ⭐ 다른 플레이어와 충돌
+        if (other.CompareTag("Player") && other.gameObject != owner)
+        {
+            Debug.Log($"🎯 {other.gameObject.name} 명중! (트리거)");
+            HandleCollision(other.gameObject);
+            return;
+        }
+        
+        if (!other.CompareTag("Player"))
+        {
+            HandleCollision(other.gameObject);
+        }
+
         if (other.gameObject == owner) return;
 
         if (other.CompareTag("Player"))
@@ -79,14 +164,22 @@ public class Bullet : MonoBehaviour
             circle.radius = colliderSize;
         else if (col is BoxCollider2D box)
             box.size = new Vector2(colliderSize, colliderSize);
+
     }
 
     void HandleCollision(GameObject hitObject)
     {
         if (hitEffectPrefab != null)
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+
+    
+
+        Debug.Log($"총알이 {hitObject.name}와(과) 충돌하여 제거됩니다.");
         Destroy(gameObject);
     }
+
+
+        // Destroy(gameObject);
 
     public void SetOwner(GameObject ownerObject)
     {
@@ -96,6 +189,7 @@ public class Bullet : MonoBehaviour
         if (ownerCollider != null && bulletCollider != null)
             Physics2D.IgnoreCollision(bulletCollider, ownerCollider);
     }
+
 
     void OnDrawGizmos()
     {

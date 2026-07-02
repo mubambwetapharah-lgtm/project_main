@@ -23,11 +23,15 @@ public class ShootBullet : MonoBehaviour
     private Transform firePoint;
     private GameObject cachedBulletPrefab;
     private InputAction fireAction;
-    private SpriteRenderer spriteRenderer;
+
+    private SpriteRenderer spriteRenderer;  // ✅ 추가
+
+    
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
         CreateFirePoint();
         cachedBulletPrefab = bulletPrefab;
         StartCoroutine(WakeUpPrefab());
@@ -89,11 +93,28 @@ public class ShootBullet : MonoBehaviour
     {
         if (firePoint == null) return;
 
-        // ✅ flipX от напарника, localScale как запасной вариант
-        bool isFacingLeft = spriteRenderer != null ? spriteRenderer.flipX : transform.localScale.x < 0;
-
+        
+        // ✅ flipX 검사로 수정
+        bool isFacingLeft = false;
+        if (spriteRenderer != null)
+            isFacingLeft = spriteRenderer.flipX;
+        else
+            isFacingLeft = transform.localScale.x < 0;
+        
         Vector2 offset = firePointOffset;
-        offset.x = isFacingLeft ? -Mathf.Abs(firePointOffset.x) : Mathf.Abs(firePointOffset.x);
+        if (isFacingLeft)
+            offset.x = -Mathf.Abs(firePointOffset.x);
+        else
+            offset.x = Mathf.Abs(firePointOffset.x);
+        
+
+
+        // // ✅ flipX от напарника, localScale как запасной вариант
+        // bool isFacingLeft = spriteRenderer != null ? spriteRenderer.flipX : transform.localScale.x < 0;
+
+        // Vector2 offset = firePointOffset;
+        // offset.x = isFacingLeft ? -Mathf.Abs(firePointOffset.x) : Mathf.Abs(firePointOffset.x);
+
         firePoint.localPosition = offset;
     }
 
@@ -111,12 +132,30 @@ public class ShootBullet : MonoBehaviour
             return;
         }
 
-        // ✅ flipX от напарника, localScale как запасной вариант
-        float direction = spriteRenderer != null
-            ? (spriteRenderer.flipX ? -1f : 1f)
-            : (transform.localScale.x > 0 ? 1f : -1f);
-
+        
+        // ✅ flipX 검사로 방향 결정
+        float direction = 1f;
+        if (spriteRenderer != null)
+            direction = spriteRenderer.flipX ? -1f : 1f;
+        else
+            direction = transform.localScale.x > 0 ? 1f : -1f;
+        
         GameObject bullet = Instantiate(prefabToUse, firePoint.position, Quaternion.identity);
+        Debug.Log($"선수 1 총알 크기: {bullet.transform.localScale}");
+        
+        // ✅ 총알 크기 고정 (선택사항, Bullet.cs에서 이미 처리했다면 생략 가능)
+        // Vector3 fixedScale = prefabToUse.transform.localScale;
+        // fixedScale.x = Mathf.Abs(fixedScale.x);
+        // bullet.transform.localScale = fixedScale;
+        
+
+
+        // ✅ flipX от напарника, localScale как запасной вариант
+        // float direction = spriteRenderer != null
+        //     ? (spriteRenderer.flipX ? -1f : 1f)
+        //     : (transform.localScale.x > 0 ? 1f : -1f);
+
+        // GameObject bullet = Instantiate(prefabToUse, firePoint.position, Quaternion.identity);
 
         // ✅ фиксация масштаба пули от напарника
         Vector3 fixedScale = prefabToUse.transform.localScale;
@@ -124,16 +163,21 @@ public class ShootBullet : MonoBehaviour
         fixedScale.y = Mathf.Abs(fixedScale.y);
         bullet.transform.localScale = fixedScale;
 
+
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
             bulletScript.speed = bulletSpeed;
             bulletScript.direction = new Vector2(direction, 0);
+
+             bulletScript.owner = gameObject;
+
             bulletScript.SetOwner(this.gameObject);
         }
 
 
         OnFire?.Invoke();
+
         
         AudioSource audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
