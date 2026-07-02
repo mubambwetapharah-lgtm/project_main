@@ -4,6 +4,9 @@
 TagManager:
   serializedVersion: 3
   tags: []
+  tags:
+  - Platform
+  - Stairs
   layers:
   - Default
   - TransparentFX

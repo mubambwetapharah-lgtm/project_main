@@ -33,6 +33,12 @@ public class Bullet : MonoBehaviour
 
 
         // AdjustColliderSize(); // 주석 처리 유지
+        // Пуля никогда не должна физически толкать игроков —
+        // только регистрировать попадание. Иначе физический
+        // импульс от столкновения может провернуть/развернуть
+        // игрока при ударе (то, что вы наблюдаете).
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.isTrigger = true;
 
         AdjustColliderSize();
 
