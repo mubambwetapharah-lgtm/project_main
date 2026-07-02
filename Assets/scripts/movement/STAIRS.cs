@@ -1,41 +1,49 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class STAIRS : MonoBehaviour
 {
     private Rigidbody2D rb;
     private bool onStairs = false;
-    private Vector2 lastPosition;
+    private InputAction jumpAction;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        jumpAction = new InputAction(binding: "<Keyboard>/w");
+        jumpAction.Enable();
     }
 
     void FixedUpdate()
     {
-        if (onStairs && Mathf.Abs(rb.linearVelocity.x) < 0.1f)
-        {
-            rb.MovePosition(lastPosition);
-            rb.linearVelocity = Vector2.zero;
-        }
+        if (!onStairs) return;
+
+        bool isMoving = Mathf.Abs(rb.linearVelocity.x) > 0.1f;
+        bool isJumping = jumpAction.IsPressed();
+
+        if (!isMoving && !isJumping)
+            rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         else
-        {
-            lastPosition = rb.position;
-        }
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Stairs"))
-        {
+        if (other.CompareTag("Stairs"))
             onStairs = true;
-            lastPosition = rb.position;
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Stairs"))
+        {
+            onStairs = false;
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
     }
 
-    void OnCollisionExit2D(Collision2D collision)
+    void OnDestroy()
     {
-        if (collision.gameObject.CompareTag("Stairs"))
-            onStairs = false;
+        jumpAction.Disable();
     }
 }
