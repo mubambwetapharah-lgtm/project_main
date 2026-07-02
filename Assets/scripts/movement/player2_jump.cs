@@ -3,10 +3,7 @@ using UnityEngine.InputSystem;
 
 public class Player2_Jump : MonoBehaviour
 {
-<<<<<<< HEAD
-    
-=======
->>>>>>> main
+
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float fallMultiplier = 2.5f;
 
@@ -17,18 +14,16 @@ public class Player2_Jump : MonoBehaviour
 
     private Rigidbody2D rb;
     private InputAction jumpAction;
-<<<<<<< HEAD
-=======
+
     private Animator animator;
->>>>>>> main
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-<<<<<<< HEAD
-=======
+
         animator = GetComponent<Animator>();
->>>>>>> main
+
         jumpAction = new InputAction(binding: "<Keyboard>/upArrow");
         jumpAction.Enable();
     }
@@ -39,10 +34,9 @@ public class Player2_Jump : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-<<<<<<< HEAD
-=======
+
             animator.SetBool("IsJumping", true);
->>>>>>> main
+
         }
 
         if (jumpAction.WasReleasedThisFrame() && rb.linearVelocity.y > 0f)
@@ -54,8 +48,7 @@ public class Player2_Jump : MonoBehaviour
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-<<<<<<< HEAD
-=======
+
 
         animator.SetFloat("VelocityY", rb.linearVelocity.y);
 
@@ -63,7 +56,7 @@ public class Player2_Jump : MonoBehaviour
         {
             animator.SetBool("IsJumping", false);
         }
->>>>>>> main
+
     }
 
     bool IsGrounded()
