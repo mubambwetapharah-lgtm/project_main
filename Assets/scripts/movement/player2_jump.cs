@@ -14,6 +14,7 @@ public class Player2_Jump : MonoBehaviour
     private Rigidbody2D rb;
     private InputAction jumpAction;
     private Animator animator;
+    public System.Action OnJump;
 
     void Start()
     {
@@ -30,6 +31,8 @@ public class Player2_Jump : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             animator.SetBool("IsJumping", true);
+
+            OnJump?.Invoke();
         }
 
         if (jumpAction.WasReleasedThisFrame() && rb.linearVelocity.y > 0f)
