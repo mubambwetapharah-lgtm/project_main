@@ -1,8 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerJump : MonoBehaviour
 {
+    [Header("Управление")]
+    [Tooltip("Путь к клавише в Input System, например \"<Keyboard>/w\" или \"<Keyboard>/upArrow\"")]
+    [SerializeField] private string jumpKeyBinding = "<Keyboard>/w";
+
+    [Header("Прыжок")]
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float fallMultiplier = 2.5f;
 
@@ -10,6 +16,9 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.1f;
     [SerializeField] private LayerMask groundLayer;
+
+    // Подписывайтесь на это событие, чтобы реагировать на прыжок (например, звук)
+    public event Action OnJump;
 
     private Rigidbody2D rb;
     private InputAction jumpAction;
@@ -19,7 +28,7 @@ public class PlayerJump : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        jumpAction = new InputAction(binding: "<Keyboard>/w");
+        jumpAction = new InputAction(binding: jumpKeyBinding);
         jumpAction.Enable();
     }
 
@@ -30,6 +39,8 @@ public class PlayerJump : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             animator.SetBool("IsJumping", true);
+
+            OnJump?.Invoke(); // 🔔 сигнал для подписчиков (например, аудио)
         }
 
         if (jumpAction.WasReleasedThisFrame() && rb.linearVelocity.y > 0f)

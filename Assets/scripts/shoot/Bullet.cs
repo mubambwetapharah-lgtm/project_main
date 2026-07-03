@@ -25,6 +25,14 @@ public class Bullet : MonoBehaviour
         rb2D.gravityScale = 0f;
         rb2D.bodyType = RigidbodyType2D.Dynamic;
         rb2D.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        // Пуля никогда не должна физически толкать игроков —
+        // только регистрировать попадание. Иначе физический
+        // импульс от столкновения может провернуть/развернуть
+        // игрока при ударе (то, что вы наблюдаете).
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.isTrigger = true;
+
         AdjustColliderSize();
     }
 
@@ -49,21 +57,6 @@ public class Bullet : MonoBehaviour
         }
 
         Destroy(gameObject, lifeTime);
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject == owner) return;
-
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage(damage);
-            Destroy(gameObject);
-            return;
-        }
-        ContactPoint2D contact = collision.GetContact(0);
-        Debug.Log($"💥 충돌 지점: {contact.point}");
-        HandleCollision(collision.gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D other)
