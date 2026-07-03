@@ -6205,18 +6205,17 @@ GameObject:
   - component: {fileID: 343799697}
   - component: {fileID: 343799696}
   - component: {fileID: 343799695}
-  - component: {fileID: 343799694}
+  - component: {fileID: 343799709}
   - component: {fileID: 343799693}
   - component: {fileID: 343799699}
   - component: {fileID: 343799700}
-  - component: {fileID: 343799701}
   - component: {fileID: 343799702}
   - component: {fileID: 343799704}
   - component: {fileID: 343799703}
   - component: {fileID: 343799705}
   - component: {fileID: 343799706}
-  - component: {fileID: 343799707}
   - component: {fileID: 343799708}
+  - component: {fileID: 343799710}
   m_Layer: 8
   m_Name: PLAYER
   m_TagString: Player
@@ -6237,25 +6236,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 4
---- !u!114 &343799694
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 343799692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d1b9b5f178815c4497cfb0f82c04cf3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerJump
-  jumpForce: 10
-  fallMultiplier: 1
-  groundCheck: {fileID: 155386296}
-  groundCheckRadius: 0.1
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!50 &343799695
 Rigidbody2D:
   serializedVersion: 5
@@ -6444,18 +6424,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &343799701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 343799692}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 047459e3ceef34a4d80febc021148d3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
 --- !u!114 &343799702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6484,7 +6452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeathSoundEvent
   deathSounds:
   - {fileID: 8300000, guid: 0ab7690a138d771489b1589450ecdf15, type: 3}
-  volume: 0.4
+  volume: 0.25
   pitchRange: {x: 0.9, y: 1.1}
   playerHealth: {fileID: 0}
 --- !u!82 &343799704
@@ -6598,7 +6566,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunSoundEvent
   shootSounds:
   - {fileID: 8300000, guid: c86b13e9d2761824897f6918b4da7aa7, type: 3}
-  volume: 0.2
+  volume: 0.09
   pitchRange: {x: 0.95, y: 1.05}
   shootScript: {fileID: 0}
 --- !u!114 &343799706
@@ -6615,21 +6583,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitSoundEvent
   hitSounds:
   - {fileID: 8300000, guid: d4e95cdf21187a64ea75d396fc3b94ce, type: 3}
-  volume: 0.6
+  volume: 0.4
   randomPitch: 1
   pitchRange: {x: 0.9, y: 1.1}
---- !u!114 &343799707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 343799692}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cc6ba7b67213944a81d3fe9dc470d89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
 --- !u!114 &343799708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6642,6 +6598,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 483adcd6898c2594fb64acf0e7feb8a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::STAIRS
+--- !u!114 &343799709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343799692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d1b9b5f178815c4497cfb0f82c04cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerJump
+  jumpKeyBinding: <Keyboard>/w
+  jumpForce: 10
+  fallMultiplier: 1
+  groundCheck: {fileID: 155386296}
+  groundCheckRadius: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &343799710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343799692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73fe6ead349df9498da704e34a6e2cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JumpSoundEvent
+  jumpSounds:
+  - {fileID: 8300000, guid: 415e60dd4225cee43a8017f6dec23f23, type: 3}
+  volume: 0.34
+  randomPitch: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  playerJump: {fileID: 343799709}
 --- !u!1 &350959087
 GameObject:
   m_ObjectHideFlags: 0
@@ -6896,7 +6890,7 @@ GameObject:
   - component: {fileID: 396605287}
   - component: {fileID: 396605286}
   - component: {fileID: 396605285}
-  - component: {fileID: 396605284}
+  - component: {fileID: 396605296}
   - component: {fileID: 396605283}
   - component: {fileID: 396605282}
   - component: {fileID: 396605288}
@@ -6907,6 +6901,7 @@ GameObject:
   - component: {fileID: 396605293}
   - component: {fileID: 396605294}
   - component: {fileID: 396605295}
+  - component: {fileID: 396605297}
   m_Layer: 8
   m_Name: Player_2
   m_TagString: Player
@@ -6961,25 +6956,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement2
   speed: 4
---- !u!114 &396605284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 396605280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d81494caecf770418122874864e2cd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player2_Jump
-  jumpForce: 10
-  fallMultiplier: 1
-  groundCheck: {fileID: 1596167544}
-  groundCheckRadius: 0.1
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!61 &396605285
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7162,7 +7138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeathSoundEvent
   deathSounds:
   - {fileID: 8300000, guid: 0ab7690a138d771489b1589450ecdf15, type: 3}
-  volume: 0.4
+  volume: 0.25
   pitchRange: {x: 0.9, y: 1.1}
   playerHealth: {fileID: 0}
 --- !u!82 &396605291
@@ -7276,7 +7252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunSoundEvent
   shootSounds:
   - {fileID: 8300000, guid: c86b13e9d2761824897f6918b4da7aa7, type: 3}
-  volume: 0.2
+  volume: 0.09
   pitchRange: {x: 0.95, y: 1.05}
   shootScript: {fileID: 0}
 --- !u!114 &396605293
@@ -7293,7 +7269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitSoundEvent
   hitSounds:
   - {fileID: 8300000, guid: d4e95cdf21187a64ea75d396fc3b94ce, type: 3}
-  volume: 0.6
+  volume: 0.4
   randomPitch: 1
   pitchRange: {x: 0.9, y: 1.1}
 --- !u!114 &396605294
@@ -7320,6 +7296,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 483adcd6898c2594fb64acf0e7feb8a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::STAIRS
+--- !u!114 &396605296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396605280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d1b9b5f178815c4497cfb0f82c04cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerJump
+  jumpKeyBinding: <Keyboard>/upArrow
+  jumpForce: 10
+  fallMultiplier: 1
+  groundCheck: {fileID: 1596167544}
+  groundCheckRadius: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &396605297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396605280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73fe6ead349df9498da704e34a6e2cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JumpSoundEvent
+  jumpSounds:
+  - {fileID: 8300000, guid: 415e60dd4225cee43a8017f6dec23f23, type: 3}
+  volume: 0.34
+  randomPitch: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  playerJump: {fileID: 396605296}
 --- !u!1 &410418477
 GameObject:
   m_ObjectHideFlags: 0
@@ -7786,6 +7800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFitBackground
   background: {fileID: 1496020662}
+  letterboxColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &532446323
 GameObject:
   m_ObjectHideFlags: 0
